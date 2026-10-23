@@ -26,7 +26,7 @@ This repository distributes the extension's source patch and reversible installe
 
 Select **Edit > Preferences > Interface > Language > English** for English. Existing language and other preferences are preserved. Keep the package's `Backups` folder for `Restore-Official.cmd`.
 
-If an older local 3D/UV build is installed, restore the official executable using that older package first. This installer accepts only the supported official executable or its own verified build. A newer upstream PhotoCraft release requires a newly ported package; it cannot be made compatible by copying an older EXE over it.
+Known previous 3D/UV builds upgrade directly when their verified official EXE backup is available in an adjacent package folder. Keep your previous package. If it is elsewhere, pass `-PreviousPackageDirectory "path to previous package"` to `Install-Mod.ps1`. The installer retains both the official EXE and previous mod EXE. Unknown builds are rejected even when the version number matches. A newer upstream PhotoCraft release requires a newly ported package.
 
 [Full installation and restore guide](docs/INSTALL.en.md) · [Русская инструкция](docs/INSTALL.ru.md)
 

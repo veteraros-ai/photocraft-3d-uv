@@ -6,6 +6,9 @@ function Read-ModManifest {
     foreach ($taskHash in @($taskManifest.payloadSha256,$taskManifest.officialSha256)) {
         if ($taskHash -notmatch '^[0-9a-fA-F]{64}$') {throw 'Invalid executable hash in manifest.'}
     }
+    foreach ($taskHash in @($taskManifest.previousPayloadSha256)) {
+        if ($null -ne $taskHash -and $taskHash -notmatch '^[0-9a-fA-F]{64}$') {throw 'Invalid previous executable hash in manifest.'}
+    }
     return $taskManifest
 }
 function Get-ModHash([string]$Path) {
@@ -13,6 +16,31 @@ function Get-ModHash([string]$Path) {
     $taskHasher=[Security.Cryptography.SHA256]::Create()
     try {return [BitConverter]::ToString($taskHasher.ComputeHash($taskStream)).Replace('-','').ToLowerInvariant()}
     finally {$taskHasher.Dispose();$taskStream.Dispose()}
+}
+function Find-ModOfficialBackup([string]$PreviousPackageDirectory,[string]$Hash,[string]$BaseVersion) {
+    # Search only adjacent mod-package folders, never the full drive or user data.
+    $taskRoots=New-Object 'System.Collections.Generic.List[string]'
+    if ($PreviousPackageDirectory) {$taskRoots.Add([IO.Path]::GetFullPath($PreviousPackageDirectory))}
+    $taskRoots.Add($PSScriptRoot)
+    $taskParent=Split-Path -Parent $PSScriptRoot
+    if ($taskParent) {
+        $taskRoots.Add($taskParent)
+        foreach ($taskFolder in @(Get-ChildItem -LiteralPath $taskParent -Directory -ErrorAction SilentlyContinue)) {
+            if ($taskFolder.Name -like 'PhotoCraft-3D-UV*' -or $taskFolder.Name -like "$BaseVersion*") {
+                $taskRoots.Add($taskFolder.FullName)
+                foreach ($taskVersion in @(Get-ChildItem -LiteralPath $taskFolder.FullName -Directory -ErrorAction SilentlyContinue)) {
+                    if ($taskVersion.Name -like "$BaseVersion*") {$taskRoots.Add($taskVersion.FullName)}
+                }
+            }
+        }
+    }
+    foreach ($taskRoot in @($taskRoots | Select-Object -Unique)) {
+        $taskCandidate=Join-Path $taskRoot ('Backups/official-'+$Hash+'.exe')
+        if (Test-Path -LiteralPath $taskCandidate -PathType Leaf) {
+            if ((Get-ModHash $taskCandidate) -eq $Hash) {return $taskCandidate}
+        }
+    }
+    return $null
 }
 function Get-ModTarget([string]$Directory) {
     $taskDirectory=[IO.Path]::GetFullPath($Directory)

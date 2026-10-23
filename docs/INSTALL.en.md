@@ -19,7 +19,7 @@ To return to the official PhotoCraft build of the same version, run `Restore-Off
 
 The PowerShell scripts also accept `-InstallDirectory "full path to the PhotoCraft folder"`. Files are replaced only after SHA-256 verification. Before installation, preferences are backed up to a ZIP file in `Backups`; the originals are left unchanged.
 
-If another version of this local mod is already installed, use that package's `Restore-Official.cmd` first, then install this package. This prevents losing the original executable needed for rollback.
+Known previous 3D/UV builds can be upgraded directly. Keep the previous package: the installer finds its verified official EXE backup in adjacent PhotoCraft-3D-UV package folders, copies it into the new package, and also retains the previous mod EXE. If the old package is elsewhere, run `Install-Mod.ps1 -PreviousPackageDirectory "path to previous package"`. Without a verified official backup, installation stops before replacing the application. Unknown builds are still rejected even if their version number matches.
 
 ## Future updates through the launcher
 

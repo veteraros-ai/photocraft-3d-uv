@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "name": "PhotoCraft 3D / UV",
-  "modVersion": "2026.10.23.2",
+  "modVersion": "2026.10.23.3",
   "packageLanguage": "en",
   "interfaceLanguages": [
     "en",
@@ -11,8 +11,11 @@
   "baseCommit": "ff4738810134d7f7e68b49f2e4f231b686282ff3",
   "architecture": "windows-x64",
   "payloadSha256": "a52610b10944a02c94a4fff79fff8c1082ee82c3d714737ab70bd8b5921ea6b7",
+  "previousPayloadSha256": [
+    "7648273bf6d43d42796da7a4ea42ae300a4926c7a77009781c77d1bbbc744635"
+  ],
   "officialSha256": "7ddafdd3da95a076483f1c1fb0f82243c077923fcb699eb957215e6a4715a61c",
   "patchSha256": "37db3a0884bb5278c5f4b157a2d234b994662eb640e834acf913d9b6e2a7c954",
-  "builtAt": "2026-10-23T05:57:26.391616+00:00",
+  "builtAt": "2026-10-23T06:12:22.399487+00:00",
   "officialRelease": "https://github.com/storytold/photocraft/releases/tag/v0.14.0"
 }
