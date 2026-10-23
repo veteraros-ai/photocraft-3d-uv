@@ -1,0 +1,13 @@
+/photocraft/
+/target/
+/dist/
+/Backups/
+**/Backups/
+installed.json
+*.exe
+*.msi
+*.zip
+*.pcuv
+*.pcraft
+*.log
+__pycache__/

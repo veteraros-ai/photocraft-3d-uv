@@ -1,0 +1,4 @@
+* text=auto
+# Unified patch context lines must retain their original whitespace.
+*.patch text eol=lf -whitespace
+*.cmd text eol=crlf
