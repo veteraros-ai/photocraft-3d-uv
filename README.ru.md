@@ -4,11 +4,11 @@
 
 Рабочая среда для рисования по 3D-моделям и работы с UV в [PhotoCraft](https://github.com/storytold/photocraft). Текущий исходный снимок рассчитан на PhotoCraft **0.17.0**; обратимый установочный пакет предназначен для **PhotoCraft 0.14.0, Windows x64**. Интерфейс доработки поддерживает русский и английский языки.
 
-Это независимая доработка сообщества. Скачайте [portable ZIP для Windows x64 (EN/RU)](https://github.com/veteraros-ai/photocraft-3d-uv/releases/tag/v0.17.0-uv.1) версии 0.17.0 и запускайте программу из распакованной папки: она не заменяет установленную версию. Старый обратимый установщик остаётся для PhotoCraft 0.14.0. Подробнее: [исходники и сборка 0.17.0](docs/CURRENT-SOURCE.md).
+Это независимая доработка сообщества. Скачайте [portable ZIP для Windows x64](https://github.com/veteraros-ai/photocraft-3d-uv/releases/tag/v0.17.0-uv.1) версии 0.17.0 и запускайте программу из распакованной папки: она не заменяет установленную версию. Интерфейс программы поддерживает английский и русский языки; в архиве есть краткие инструкции на обоих языках. Старый обратимый установщик остаётся для PhotoCraft 0.14.0. Подробнее: [исходники и сборка 0.17.0](docs/CURRENT-SOURCE.md).
 
 ## Запуск portable-сборки PhotoCraft 0.17.0
 
-1. Скачайте [EN или RU portable ZIP](https://github.com/veteraros-ai/photocraft-3d-uv/releases/tag/v0.17.0-uv.1) и распакуйте весь архив в доступную для записи папку.
+1. Скачайте [portable ZIP](https://github.com/veteraros-ai/photocraft-3d-uv/releases/tag/v0.17.0-uv.1) и распакуйте весь архив в доступную для записи папку. В приложении можно выбрать английский или русский язык.
 2. Запустите `photocraft.exe` из распакованной папки и выберите среду **3D**.
 3. Язык интерфейса меняется в **Edit > Preferences > Interface > Language**.
 
@@ -60,7 +60,7 @@
 
 ## Исходники и сборка
 
-Текущий патч `source/photocraft-uv-0.17.0.patch` применяется к коммиту upstream `5f9b4391874aabc9deb2fcb905267613e4d93ec8` и соответствует исходнику `aed4caa4a754e9ffd42e1cd2709c8c92679acccd`. Инструкции по сборке приведены в [English README](README.md#build-the-current-photocraft-0170-source) и [заметках об исходниках 0.17.0](docs/CURRENT-SOURCE.md). Предыдущий снимок `source/photocraft-uv-0.16.0.patch` сохранён; старый `source/photocraft-uv.patch` используется историческими установочными пакетами для PhotoCraft 0.14.0.
+Текущий патч `source/photocraft-uv-0.17.0.patch` применяется к коммиту upstream `5f9b4391874aabc9deb2fcb905267613e4d93ec8` и соответствует исходнику `aed4caa4a754e9ffd42e1cd2709c8c92679acccd`. Инструкции по сборке приведены в [English README](README.md#build-the-current-photocraft-0170-source) и [заметках об исходниках 0.17.0](docs/CURRENT-SOURCE.md). Предыдущий снимок `source/photocraft-uv-0.16.0.patch` сохранён; старый `source/photocraft-uv.patch` используется историческими установочными пакетами для PhotoCraft 0.14.0. `release-manifest.json` описывает только исторические установщики для PhotoCraft 0.14.0; текущий источник версии 0.17.0 описан в `source/current-source.json`.
 
 Установщик находится в `installer/`, документация — в `docs/`, контрольные суммы — в `release-manifest.json` и файле `SHA256SUMS.txt` релиза. Готовые EXE распространяются в Releases. Пользовательские сцены, настройки, рабочие модели и кэши не включены.
 

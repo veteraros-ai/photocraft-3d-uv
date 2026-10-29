@@ -15,8 +15,9 @@ git -C photocraft apply ../source/photocraft-uv-0.17.0.patch
 cargo build --manifest-path photocraft/Cargo.toml -p photocraft --features "heif uv-workbench" --release --locked
 ```
 
-The Windows x64 portable ZIP contains the desktop and CLI executables, notices,
-licenses, and a `portable.txt` marker. It is built from this exact patch by the
+The Windows x64 portable ZIP contains the desktop and CLI executables, English
+and Russian quick-start notes, notices, licenses (including the embedded UV icon
+license), and a `portable.txt` marker. It is built from this exact patch by the
 repository's **Build portable release** workflow. Extract the ZIP to a writable
 folder and run `photocraft.exe`; it does not replace an installed PhotoCraft
 executable. The current-source package is independent of the historical

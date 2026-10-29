@@ -62,6 +62,8 @@ jobs:
           foreach ($file in 'README.md', 'LICENSE-MIT', 'LICENSE-APACHE', 'NOTICE', 'ATTRIBUTION.md') {
             Copy-Item (Join-Path 'photocraft' $file) $stage
           }
+          Copy-Item README.ru.md $stage
+          Copy-Item photocraft/assets/icons/LICENSE-uv.txt (Join-Path $stage 'LICENSE-uv-icons.txt')
           Get-ChildItem -Path (Join-Path $env:CRAFT_FONTS_DIR 'fonts') -Directory | ForEach-Object {
             $license = Join-Path $_.FullName 'OFL.txt'
             if (Test-Path $license) { Copy-Item $license (Join-Path $stage "OFL-$($_.Name).txt") }
@@ -88,4 +90,11 @@ jobs:
 
           This package is built from the source patch and upstream commit pinned in `source/current-source.json`. SHA-256 is attached in `SHA256SUMS.txt`. Interface languages include English and Russian.
           '@ | Set-Content -LiteralPath $notes -Encoding utf8
-          gh release create $tag "$env:ZIP_PATH" (Join-Path $env:RUNNER_TEMP 'SHA256SUMS.txt') --repo veteraros-ai/photocraft-3d-uv --title 'PhotoCraft 0.17.0 with 3D / UV workspace (Windows x64)' --notes-file $notes --target "${{ github.sha }}"
+          $assets = @("$env:ZIP_PATH", (Join-Path $env:RUNNER_TEMP 'SHA256SUMS.txt'))
+          gh release view $tag --repo veteraros-ai/photocraft-3d-uv *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $tag $assets --repo veteraros-ai/photocraft-3d-uv --clobber
+            if ($LASTEXITCODE -ne 0) { throw "Could not replace the portable release assets" }
+          } else {
+            gh release create $tag $assets --repo veteraros-ai/photocraft-3d-uv --title 'PhotoCraft 0.17.0 with 3D / UV workspace (Windows x64)' --notes-file $notes --target "${{ github.sha }}"
+          }

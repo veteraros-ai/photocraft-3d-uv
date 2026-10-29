@@ -4,13 +4,13 @@
 
 A native 3D texture-painting and UV workspace for [PhotoCraft](https://github.com/storytold/photocraft), with an English and Russian interface. The current source targets PhotoCraft **0.17.0**; the reversible installer package is for **PhotoCraft 0.14.0 on Windows x64**.
 
-This repository distributes the extension's source patch and reversible installer. The complete application is assembled from the pinned upstream release plus that patch. It is an independent community modification and is not an official PhotoCraft release.
+This repository distributes the extension's source patch, a portable build, and a historical reversible installer. The current application is assembled from the pinned upstream source plus that patch. It is an independent community modification and is not an official PhotoCraft release.
 
-The current source snapshot is ported to PhotoCraft **0.17.0**. Download its [Windows x64 portable ZIP (EN/RU)](https://github.com/veteraros-ai/photocraft-3d-uv/releases/tag/v0.17.0-uv.1). The reversible installer packages below remain for PhotoCraft 0.14.0. See [the 0.17.0 source and build notes](docs/CURRENT-SOURCE.md).
+The current source snapshot is ported to PhotoCraft **0.17.0**. Download its [Windows x64 portable ZIP](https://github.com/veteraros-ai/photocraft-3d-uv/releases/tag/v0.17.0-uv.1). The application interface supports English and Russian; the archive includes both English and Russian quick-start notes. The reversible installer packages below remain for PhotoCraft 0.14.0. See [the 0.17.0 source and build notes](docs/CURRENT-SOURCE.md).
 
 ## Run the current PhotoCraft 0.17.0 portable build
 
-1. Download the [EN or RU portable ZIP](https://github.com/veteraros-ai/photocraft-3d-uv/releases/tag/v0.17.0-uv.1) and extract the entire archive into a writable folder.
+1. Download the [portable ZIP](https://github.com/veteraros-ai/photocraft-3d-uv/releases/tag/v0.17.0-uv.1) and extract the entire archive into a writable folder. The application interface supports both English and Russian.
 2. Run `photocraft.exe` from the extracted folder and choose the **3D** workspace.
 3. To switch the interface, select **Edit > Preferences > Interface > Language**.
 
@@ -71,7 +71,7 @@ git -C photocraft apply ../source/photocraft-uv-0.17.0.patch
 cargo build --manifest-path photocraft/Cargo.toml -p photocraft --features "heif uv-workbench" --release --locked
 ```
 
-See [current source notes](docs/CURRENT-SOURCE.md) for portable package contents and scope. The Windows ZIP is built from this exact source snapshot by the repository's `Build portable release` workflow. This source build does not replace an installed PhotoCraft executable.
+See [current source notes](docs/CURRENT-SOURCE.md) for portable package contents and scope. The Windows ZIP is built from this exact source snapshot by the repository's `Build portable release` workflow. The upstream README and a Russian quick-start are included in the archive. This source build does not replace an installed PhotoCraft executable.
 
 ## Build the PhotoCraft 0.14.0 installer package
 
@@ -92,7 +92,7 @@ The patch base is `ff4738810134d7f7e68b49f2e4f231b686282ff3`. Set `CARGO_TARGET_
 - `source/photocraft-uv.patch`: source patch used by the historical 0.14.0 installer packages.
 - `installer/`: PowerShell installation and restore sources used in release packages.
 - `docs/`: installation, implementation and validation notes.
-- `release-manifest.json`: compatible base version and published payload/source hashes.
+- `release-manifest.json`: historical PhotoCraft 0.14.0 installer compatibility and payload/source hashes; the current 0.17.0 snapshot is documented in `source/current-source.json`.
 
 Prebuilt executables are release assets. User projects, preferences, commercial test models and build caches are not included.
 
