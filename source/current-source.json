@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "productVersion": "0.17.0",
+  "upstreamRepository": "https://github.com/storytold/photocraft",
+  "upstreamBaseCommit": "5f9b4391874aabc9deb2fcb905267613e4d93ec8",
+  "extensionCommit": "aed4caa4a754e9ffd42e1cd2709c8c92679acccd",
+  "patch": "photocraft-uv-0.17.0.patch",
+  "patchSha256": "4bcebc15c41488eb65be1215f262288dedd4b26d8afc31e0b547bca8ee9a2b91"
+}

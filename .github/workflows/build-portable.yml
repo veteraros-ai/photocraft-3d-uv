@@ -1,0 +1,91 @@
+name: Build portable release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows-x64:
+    name: PhotoCraft 0.17.0 portable (Windows x64)
+    runs-on: windows-latest
+    timeout-minutes: 100
+    env:
+      CRAFT_FONTS_DIR: ${{ github.workspace }}/craft-fonts
+      CRAFT_FONTS_REQUIRED: "1"
+      PHOTOCRAFT_BUILD_SHA: aed4caa4a754e9ffd42e1cd2709c8c92679acccd
+      PHOTOCRAFT_VERSION: 0.17.0
+      CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_RUSTFLAGS: -C target-feature=+crt-static
+    steps:
+      - name: Check out distribution sources
+        uses: actions/checkout@v4
+
+      - name: Install stable Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust build
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: photocraft -> target
+
+      - name: Fetch pinned upstream and bundled fonts
+        shell: pwsh
+        run: |
+          git clone --filter=blob:none https://github.com/storytold/photocraft.git photocraft
+          git -C photocraft checkout 5f9b4391874aabc9deb2fcb905267613e4d93ec8
+          git clone --filter=blob:none https://github.com/storytold/craft-fonts.git craft-fonts
+          git -C craft-fonts checkout b076417b5880bd4154bd22f00695b1d28c6bea83
+          git -C photocraft apply "$env:GITHUB_WORKSPACE/source/photocraft-uv-0.17.0.patch"
+          if ($LASTEXITCODE -ne 0) { throw "Failed to apply the pinned UV patch" }
+
+      - name: Build desktop app and CLI
+        shell: pwsh
+        env:
+          PHOTOCRAFT_REQUIRE_WINRES: "1"
+        run: |
+          cargo build --manifest-path photocraft/Cargo.toml --release --locked -p photocraft --features "heif uv-workbench"
+          if ($LASTEXITCODE -ne 0) { throw "PhotoCraft app build failed" }
+          cargo build --manifest-path photocraft/Cargo.toml --release --locked -p photocraft-cli --features heif
+          if ($LASTEXITCODE -ne 0) { throw "PhotoCraft CLI build failed" }
+
+      - name: Package portable ZIP
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $bin = Join-Path $env:GITHUB_WORKSPACE 'photocraft/target/release'
+          $stage = Join-Path $env:RUNNER_TEMP 'photocraft-0.17.0-windows-x64-portable'
+          $zip = Join-Path $env:RUNNER_TEMP 'photocraft-0.17.0-windows-x64-portable.zip'
+          New-Item -ItemType Directory -Force -Path $stage | Out-Null
+          Copy-Item (Join-Path $bin 'photocraft.exe'), (Join-Path $bin 'photocraft-cli.exe') $stage
+          Copy-Item photocraft/packaging/windows/portable.txt $stage
+          foreach ($file in 'README.md', 'LICENSE-MIT', 'LICENSE-APACHE', 'NOTICE', 'ATTRIBUTION.md') {
+            Copy-Item (Join-Path 'photocraft' $file) $stage
+          }
+          Get-ChildItem -Path (Join-Path $env:CRAFT_FONTS_DIR 'fonts') -Directory | ForEach-Object {
+            $license = Join-Path $_.FullName 'OFL.txt'
+            if (Test-Path $license) { Copy-Item $license (Join-Path $stage "OFL-$($_.Name).txt") }
+          }
+          & (Join-Path $bin 'photocraft-cli.exe') --version
+          if ($LASTEXITCODE -ne 0) { throw "Portable CLI smoke check failed" }
+          Compress-Archive -Path (Join-Path $stage '*') -DestinationPath $zip -CompressionLevel Optimal
+          $hash = (Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLowerInvariant()
+          Set-Content -LiteralPath (Join-Path $env:RUNNER_TEMP 'SHA256SUMS.txt') -Value "$hash  $(Split-Path $zip -Leaf)" -Encoding ascii
+          "ZIP_PATH=$zip" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Publish GitHub release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $tag = 'v0.17.0-uv.1'
+          $notes = Join-Path $env:RUNNER_TEMP 'release-notes.md'
+          @'
+          PhotoCraft 0.17.0 with the community 3D / UV workspace enabled.
+
+          Download the Windows x64 portable ZIP, extract the whole archive to a writable folder, and launch `photocraft.exe`. It does not replace an installed PhotoCraft copy. The portable marker keeps this build's settings beside the executable.
+
+          This package is built from the source patch and upstream commit pinned in `source/current-source.json`. SHA-256 is attached in `SHA256SUMS.txt`. Interface languages include English and Russian.
+          '@ | Set-Content -LiteralPath $notes -Encoding utf8
+          gh release create $tag "$env:ZIP_PATH" (Join-Path $env:RUNNER_TEMP 'SHA256SUMS.txt') --repo veteraros-ai/photocraft-3d-uv --title 'PhotoCraft 0.17.0 with 3D / UV workspace (Windows x64)' --notes-file $notes --target "${{ github.sha }}"
